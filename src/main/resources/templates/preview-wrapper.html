@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- Inject CSS from definitions -->
+    <link th:each="css : ${_previewCss}" th:href="${css}" rel="stylesheet"/>
+</head>
+<body>
+    <!-- Full template mode -->
+    <div th:if="${_fragment == null}"
+         th:insert="~{__${_templatePath}__}"></div>
+
+    <!-- Fragment mode -->
+    <div th:if="${_fragment != null}"
+         th:insert="~{__${_templatePath}__ :: __${_fragment}__}"></div>
+
+    <!-- Inject JS from definitions -->
+    <script th:each="js : ${_previewJs}" th:src="${js}"></script>
+</body>
+</html>

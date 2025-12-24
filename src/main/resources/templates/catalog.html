@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Template Catalog - Thymeleaf Preview</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        header {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #333;
+        }
+        .search-form {
+            display: flex;
+            gap: 10px;
+        }
+        .search-input {
+            flex: 1;
+            padding: 10px 16px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+        }
+        .search-button {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .search-button:hover {
+            background: #0056b3;
+        }
+        .clear-link {
+            padding: 10px 16px;
+            color: #666;
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+        .clear-link:hover {
+            color: #333;
+        }
+        .results-info {
+            color: #666;
+            font-size: 0.875rem;
+            margin-bottom: 16px;
+        }
+        .template-list {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .template-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #eee;
+            text-decoration: none;
+            color: inherit;
+            transition: background-color 0.15s;
+        }
+        .template-item:last-child {
+            border-bottom: none;
+        }
+        .template-item:hover {
+            background-color: #f8f9fa;
+        }
+        .template-icon {
+            width: 40px;
+            height: 40px;
+            background: #e9ecef;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            font-size: 1.25rem;
+            color: #666;
+        }
+        .template-info {
+            flex: 1;
+        }
+        .template-path {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        .template-meta {
+            font-size: 0.75rem;
+            color: #888;
+        }
+        .template-arrow {
+            color: #ccc;
+            font-size: 1.25rem;
+        }
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+            color: #666;
+        }
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+        .empty-state-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+        .page-link {
+            padding: 8px 16px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+        }
+        .page-link:hover {
+            background: #f8f9fa;
+        }
+        .page-link.disabled {
+            color: #ccc;
+            pointer-events: none;
+        }
+        .page-info {
+            padding: 8px 16px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Template Catalog</h1>
+            <form class="search-form" action="/catalog" method="get">
+                <input type="text" name="q" class="search-input"
+                       placeholder="Search templates..."
+                       th:value="${catalog.searchQuery}"/>
+                <button type="submit" class="search-button">Search</button>
+                <a th:if="${catalog.searchQuery != null}" href="/catalog" class="clear-link">Clear</a>
+            </form>
+        </header>
+
+        <div class="results-info">
+            <span th:if="${catalog.searchQuery != null}">
+                Showing results for "<span th:text="${catalog.searchQuery}">query</span>" -
+            </span>
+            <span th:text="${catalog.totalTemplates}">0</span> template(s) found
+        </div>
+
+        <div class="template-list" th:if="${!catalog.templates.isEmpty()}">
+            <a th:each="template : ${catalog.templates}"
+               th:href="@{/preview(tpl=${template.path})}"
+               class="template-item">
+                <div class="template-icon">&#128196;</div>
+                <div class="template-info">
+                    <div class="template-path" th:text="${template.path}">path/to/template.html</div>
+                    <div class="template-meta">
+                        <span th:text="${template.size} + ' bytes'">100 bytes</span>
+                        <span th:if="${template.lastModified != null}">
+                            · <span th:text="${#temporals.format(template.lastModified, 'yyyy-MM-dd HH:mm')}">2024-01-01 12:00</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="template-arrow">&#8250;</div>
+            </a>
+        </div>
+
+        <div class="template-list empty-state" th:if="${catalog.templates.isEmpty()}">
+            <div class="empty-state-icon">&#128269;</div>
+            <div class="empty-state-title">No templates found</div>
+            <p th:if="${catalog.searchQuery != null}">Try a different search term or <a href="/catalog">view all templates</a>.</p>
+            <p th:if="${catalog.searchQuery == null}">No HTML files found in the templates directory.</p>
+        </div>
+
+        <div class="pagination" th:if="${catalog.totalPages > 1}">
+            <a th:href="@{/catalog(q=${catalog.searchQuery}, page=${catalog.page - 1})}"
+               th:classappend="${!catalog.hasPrevious()} ? 'disabled' : ''"
+               class="page-link">&#171; Previous</a>
+            <span class="page-info">
+                Page <span th:text="${catalog.page + 1}">1</span> of <span th:text="${catalog.totalPages}">1</span>
+            </span>
+            <a th:href="@{/catalog(q=${catalog.searchQuery}, page=${catalog.page + 1})}"
+               th:classappend="${!catalog.hasNext()} ? 'disabled' : ''"
+               class="page-link">Next &#187;</a>
+        </div>
+    </div>
+</body>
+</html>

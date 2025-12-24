@@ -1,0 +1,15 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: thymeleaf-preview
+
+preview:
+  templates-root: ${TEMPLATES_ROOT:}
+  defs-root: ${DEFS_ROOT:}
+
+logging:
+  level:
+    com.example.thymeleafpreview: DEBUG
+    org.thymeleaf: INFO

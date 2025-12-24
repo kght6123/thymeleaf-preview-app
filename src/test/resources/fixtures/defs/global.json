@@ -1,0 +1,8 @@
+{
+  "css": ["/assets/css/style.css"],
+  "js": ["/assets/js/app.js"],
+  "fixtures": {
+    "siteName": "Test Site",
+    "currentYear": 2025
+  }
+}

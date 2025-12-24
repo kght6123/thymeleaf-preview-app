@@ -1,0 +1,218 @@
+openapi: 3.0.3
+info:
+  title: Thymeleaf Preview Tool API
+  description: API for previewing Thymeleaf templates with mock data
+  version: 1.0.0
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+
+paths:
+  /preview:
+    get:
+      summary: Preview a Thymeleaf template
+      description: |
+        Renders a Thymeleaf template with mock data from JSON definitions.
+        Supports full template or fragment rendering.
+      operationId: previewTemplate
+      tags:
+        - Preview
+      parameters:
+        - name: tpl
+          in: query
+          required: true
+          description: Relative path to template from templatesRoot
+          schema:
+            type: string
+            example: "pages/index.html"
+        - name: fragment
+          in: query
+          required: false
+          description: Fragment name to render (optional)
+          schema:
+            type: string
+            example: "header"
+      responses:
+        "200":
+          description: Rendered HTML content
+          content:
+            text/html:
+              schema:
+                type: string
+        "404":
+          description: Template not found
+          content:
+            text/html:
+              schema:
+                type: string
+                description: Error page with details
+        "400":
+          description: Invalid path (traversal attempt)
+          content:
+            text/html:
+              schema:
+                type: string
+        "500":
+          description: Template rendering error or invalid JSON
+          content:
+            text/html:
+              schema:
+                type: string
+
+  /catalog:
+    get:
+      summary: List available templates
+      description: |
+        Returns a paginated list of all HTML templates in templatesRoot.
+        Supports search filtering by file path.
+      operationId: listTemplates
+      tags:
+        - Catalog
+      parameters:
+        - name: search
+          in: query
+          required: false
+          description: Search term to filter templates
+          schema:
+            type: string
+            example: "header"
+        - name: page
+          in: query
+          required: false
+          description: Page number (0-indexed)
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+        - name: size
+          in: query
+          required: false
+          description: Page size
+          schema:
+            type: integer
+            default: 50
+            minimum: 1
+            maximum: 200
+      responses:
+        "200":
+          description: Catalog page with template list
+          content:
+            text/html:
+              schema:
+                type: string
+                description: Rendered catalog HTML page
+
+  /assets/{path}:
+    get:
+      summary: Serve static asset
+      description: |
+        Serves static files (CSS, JS, images) from templatesRoot.
+        Files are served with no-cache headers for hot reload support.
+      operationId: serveAsset
+      tags:
+        - Assets
+      parameters:
+        - name: path
+          in: path
+          required: true
+          description: Relative path to asset from templatesRoot
+          schema:
+            type: string
+            example: "css/style.css"
+      responses:
+        "200":
+          description: Asset content with appropriate Content-Type
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                example: "no-cache, no-store, must-revalidate"
+        "404":
+          description: Asset not found
+        "400":
+          description: Invalid path (traversal attempt)
+
+components:
+  schemas:
+    TemplateInfo:
+      type: object
+      properties:
+        path:
+          type: string
+          description: Relative path from templatesRoot
+          example: "pages/index.html"
+        name:
+          type: string
+          description: File name
+          example: "index.html"
+        directory:
+          type: string
+          description: Parent directory
+          example: "pages"
+        lastModified:
+          type: string
+          format: date-time
+          description: Last modification timestamp
+        previewUrl:
+          type: string
+          description: URL to preview this template
+          example: "/preview?tpl=pages/index.html"
+
+    CatalogPage:
+      type: object
+      properties:
+        templates:
+          type: array
+          items:
+            $ref: "#/components/schemas/TemplateInfo"
+        totalCount:
+          type: integer
+          description: Total number of matching templates
+        page:
+          type: integer
+          description: Current page number
+        pageSize:
+          type: integer
+          description: Items per page
+        hasMore:
+          type: boolean
+          description: Whether more pages exist
+        searchTerm:
+          type: string
+          nullable: true
+          description: Active search filter
+
+    ErrorInfo:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - NOT_FOUND
+            - INVALID_PATH
+            - INVALID_JSON
+            - RENDER_ERROR
+        message:
+          type: string
+          description: Human-readable error message
+        path:
+          type: string
+          description: Related file path
+        line:
+          type: integer
+          nullable: true
+          description: Line number for parse errors
+        suggestion:
+          type: string
+          description: Remediation guidance
+
+tags:
+  - name: Preview
+    description: Template preview operations
+  - name: Catalog
+    description: Template catalog browsing
+  - name: Assets
+    description: Static file serving

@@ -1,0 +1,41 @@
+# Git
+.git/
+.gitignore
+
+# Build output
+target/
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# Docker files (avoid recursive copy)
+Dockerfile*
+.dockerignore
+docker-compose*.yml
+
+# Documentation
+*.md
+docs/
+specs/
+
+# Environment files
+.env*
+*.env
+
+# Logs
+*.log
+logs/
+
+# Test fixtures (not needed in production image)
+src/test/
+
+# Maven wrapper (copied explicitly)
+!.mvn/
+
+# OS files
+.DS_Store
+Thumbs.db

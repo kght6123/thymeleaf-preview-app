@@ -1,0 +1,6 @@
+{
+  "fixtures": {
+    "headerTitle": "Component Header",
+    "siteName": "Header Site Override"
+  }
+}
