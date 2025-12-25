@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sample Dialect Demo</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .section { margin: 20px 0; padding: 15px; background: #f5f5f5; border-radius: 4px; }
+        .section h3 { margin-top: 0; color: #333; }
+        code { background: #e8e8e8; padding: 2px 6px; border-radius: 3px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background: #4CAF50; color: white; }
+    </style>
+</head>
+<body>
+    <h1>Sample Preview Dialect Demo</h1>
+    <p>This template demonstrates the custom expression objects provided by the sample-preview-dialect.</p>
+
+    <!-- #request expression object demo -->
+    <div class="section">
+        <h3>#request - Mock HTTP Request</h3>
+        <table>
+            <tr>
+                <th>Expression</th>
+                <th>Result</th>
+            </tr>
+            <tr>
+                <td><code>${#request.getHeader('Accept-Language')}</code></td>
+                <td th:text="${#request.getHeader('Accept-Language')}">header value</td>
+            </tr>
+            <tr>
+                <td><code>${#request.getHeader('X-Custom-Header')}</code></td>
+                <td th:text="${#request.getHeader('X-Custom-Header')}">custom header</td>
+            </tr>
+            <tr>
+                <td><code>${#request.contextPath}</code></td>
+                <td th:text="${#request.contextPath}">/app</td>
+            </tr>
+            <tr>
+                <td><code>${#request.requestURI}</code></td>
+                <td th:text="${#request.requestURI}">/products/list</td>
+            </tr>
+            <tr>
+                <td><code>${#request.queryString}</code></td>
+                <td th:text="${#request.queryString}">page=1</td>
+            </tr>
+            <tr>
+                <td><code>${#request.serverName}</code></td>
+                <td th:text="${#request.serverName}">localhost</td>
+            </tr>
+            <tr>
+                <td><code>${#request.requestURL}</code></td>
+                <td th:text="${#request.requestURL}">full url</td>
+            </tr>
+            <tr>
+                <td><code>${#request.getAttribute('userId')}</code></td>
+                <td th:text="${#request.getAttribute('userId')}">user id</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- #utils expression object demo -->
+    <div class="section">
+        <h3>#utils - Utility Functions</h3>
+        <table>
+            <tr>
+                <th>Expression</th>
+                <th>Result</th>
+            </tr>
+            <tr>
+                <td><code>${#utils.formatCurrency(1234.56)}</code></td>
+                <td th:text="${#utils.formatCurrency(1234.56)}">$1,234.56</td>
+            </tr>
+            <tr>
+                <td><code>${#utils.formatNumber(1234567)}</code></td>
+                <td th:text="${#utils.formatNumber(1234567)}">1,234,567</td>
+            </tr>
+            <tr>
+                <td><code>${#utils.formatDecimal(1234.5678, 2)}</code></td>
+                <td th:text="${#utils.formatDecimal(1234.5678, 2)}">1,234.57</td>
+            </tr>
+            <tr>
+                <td><code>${#utils.truncate('Hello World Example', 10)}</code></td>
+                <td th:text="${#utils.truncate('Hello World Example', 10)}">Hello W...</td>
+            </tr>
+            <tr>
+                <td><code>${#utils.urlEncode('hello world')}</code></td>
+                <td th:text="${#utils.urlEncode('hello world')}">hello+world</td>
+            </tr>
+            <tr>
+                <td><code>${#utils.defaultIfEmpty('', 'N/A')}</code></td>
+                <td th:text="${#utils.defaultIfEmpty('', 'N/A')}">N/A</td>
+            </tr>
+            <tr>
+                <td><code>${#utils.defaultIfEmpty('Value', 'N/A')}</code></td>
+                <td th:text="${#utils.defaultIfEmpty('Value', 'N/A')}">Value</td>
+            </tr>
+            <tr>
+                <td><code>${#utils.isEmpty('')}</code></td>
+                <td th:text="${#utils.isEmpty('')}">true</td>
+            </tr>
+            <tr>
+                <td><code>${#utils.hasValue('test')}</code></td>
+                <td th:text="${#utils.hasValue('test')}">true</td>
+            </tr>
+            <tr>
+                <td><code>${#utils.translate('greeting')}</code></td>
+                <td th:text="${#utils.translate('greeting')}">Hello</td>
+            </tr>
+            <tr>
+                <td><code>${#utils.translate('unknown', 'Fallback')}</code></td>
+                <td th:text="${#utils.translate('unknown', 'Fallback')}">Fallback</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Practical usage examples -->
+    <div class="section">
+        <h3>Practical Usage Examples</h3>
+
+        <h4>Navigation with context path</h4>
+        <p>
+            <a th:href="${#request.contextPath + '/products'}">Products</a> |
+            <a th:href="${#request.contextPath + '/cart'}">Cart</a> |
+            <a th:href="${#request.contextPath + '/account'}">Account</a>
+        </p>
+
+        <h4>Conditional rendering based on header</h4>
+        <p th:if="${#request.getHeader('Accept-Language') != null}">
+            Language preference detected: <span th:text="${#request.getHeader('Accept-Language')}">en-US</span>
+        </p>
+
+        <h4>Price formatting</h4>
+        <p>
+            Regular price: <span th:text="${#utils.formatCurrency(99.99)}">$99.99</span><br>
+            Sale price: <span th:text="${#utils.formatCurrency(79.99)}">$79.99</span><br>
+            You save: <span th:text="${#utils.formatCurrency(20.00)}">$20.00</span>
+        </p>
+    </div>
+
+</body>
+</html>

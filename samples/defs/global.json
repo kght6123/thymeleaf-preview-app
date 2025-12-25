@@ -1,7 +1,26 @@
 {
+    "css": [],
+    "js": [],
     "fixtures": {
         "siteName": "Thymeleaf Preview Tool",
         "footerText": "© 2024 Thymeleaf Preview Tool. All rights reserved.",
         "appVersion": "1.0.0"
+    },
+    "dialects": {
+        "request": {
+            "headers": {
+                "Accept-Language": "en-US"
+            },
+            "attributes": {},
+            "contextPath": "",
+            "requestURI": "/",
+            "queryString": "",
+            "serverName": "localhost"
+        },
+        "utils": {
+            "locale": "en-US",
+            "currencySymbol": "$",
+            "translations": {}
+        }
     }
 }

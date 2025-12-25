@@ -1,0 +1,35 @@
+{
+    "css": [],
+    "js": [],
+    "fixtures": {
+        "pageTitle": "Dialect Demo Page"
+    },
+    "dialects": {
+        "request": {
+            "headers": {
+                "Accept-Language": "en-US",
+                "X-Custom-Header": "my-custom-value",
+                "X-User-Agent": "Preview/1.0"
+            },
+            "attributes": {
+                "userId": "12345",
+                "sessionId": "abc-def-ghi"
+            },
+            "contextPath": "/myapp",
+            "requestURI": "/products/list",
+            "queryString": "page=1&category=books",
+            "serverName": "example.com"
+        },
+        "utils": {
+            "locale": "en-US",
+            "currencySymbol": "$",
+            "translations": {
+                "greeting": "Hello, Welcome!",
+                "farewell": "Goodbye!",
+                "submit": "Submit",
+                "cancel": "Cancel",
+                "save": "Save Changes"
+            }
+        }
+    }
+}

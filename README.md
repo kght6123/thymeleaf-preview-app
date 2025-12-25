@@ -6,6 +6,7 @@ Thymeleafテンプレートをモックデータで即座にプレビューで�
 
 - **Hot Reload** - サーバー再起動なしでテンプレート/JSON/CSSの変更を即時反映
 - **Mock Data Injection** - JSONファイルでテンプレート変数を定義
+- **Custom Dialects** - 外部JARからカスタムExpression Objectを動的ロード
 - **Template Catalog** - テンプレート一覧の検索・閲覧UI
 - **Static Asset Serving** - CSS/JS/画像の配信
 - **Security** - パストラバーサル攻撃防止
@@ -49,6 +50,62 @@ docker run -p 8080:8080 \
   thymeleaf-preview:latest
 ```
 
+### カスタムダイアレクトを使う
+
+thymeleaf-preview-appは外部JARからカスタムThymeleafダイアレクトを動的にロードできます。これにより、プロジェクト固有の Expression Object（`#myUtil`, `#request` など）をプレビュー環境で利用可能にします。
+
+#### サンプルダイアレクトで試す
+
+```bash
+# 1. thymeleaf-preview-app をビルド
+./mvnw package -DskipTests
+
+# 2. サンプルダイアレクトをビルド
+cd samples/sample-dialect
+mvn package -DskipTests
+cd ../..
+
+# 3. ダイアレクト付きで起動
+java -Dloader.path=samples/sample-dialect/target/sample-preview-dialect-1.0.0-SNAPSHOT.jar \
+  -jar target/thymeleaf-preview-1.0.0-SNAPSHOT.jar \
+  --preview.templates-root=samples/templates \
+  --preview.defs-root=samples/defs
+
+# 4. ブラウザでダイアレクトデモを確認
+# http://localhost:8080/preview?tpl=dialect-demo.html
+```
+
+サンプルダイアレクトは以下の Expression Object を提供します：
+
+| Expression Object | 説明 | 使用例 |
+|-------------------|------|--------|
+| `#request` | HTTPリクエストモック | `${#request.getHeader('Accept-Language')}` |
+| `#utils` | ユーティリティ関数 | `${#utils.formatCurrency(1234.56)}` |
+
+#### 独自ダイアレクトの作成
+
+`samples/sample-dialect/` をテンプレートとして独自のダイアレクトを作成できます。詳細は [samples/sample-dialect/README.md](samples/sample-dialect/README.md) を参照してください。
+
+**重要なポイント：**
+
+1. **ServiceLoader登録** - `META-INF/services/org.thymeleaf.dialect.IDialect` にダイアレクトクラス名を記載
+2. **loader.path指定** - 起動時に `-Dloader.path=<jar-path>` でJARを指定
+3. **設定はJSONで** - `global.json` や各テンプレート用JSONの `dialects` セクションで設定
+
+```json
+{
+  "dialects": {
+    "request": {
+      "headers": { "X-Custom": "value" }
+    },
+    "utils": {
+      "locale": "ja-JP",
+      "translations": { "hello": "こんにちは" }
+    }
+  }
+}
+```
+
 ## Endpoints
 
 | Endpoint | Description |
@@ -87,19 +144,28 @@ defs/
 
 ```json
 {
+    "css": ["/assets/css/style.css"],
+    "js": ["/assets/js/main.js"],
     "fixtures": {
         "title": "Page Title",
         "items": [
             { "name": "Item 1" },
             { "name": "Item 2" }
         ]
+    },
+    "dialects": {
+        "request": { "headers": { "X-Lang": "ja" } },
+        "utils": { "locale": "ja-JP" }
     }
 }
 ```
 
-`fixtures` 内のデータがテンプレート変数として利用可能：
-- `${title}` → "Page Title"
-- `${items}` → リストとして th:each で使用可能
+| フィールド | 説明 |
+|-----------|------|
+| `css` | プレビューに注入するCSSファイルパス |
+| `js` | プレビューに注入するJSファイルパス |
+| `fixtures` | テンプレート変数（`${title}`, `${items}` など） |
+| `dialects` | カスタムダイアレクト用設定（Expression Object に渡される） |
 
 ## Sample Files
 
@@ -107,6 +173,7 @@ defs/
 
 - `samples/templates/` - サンプルテンプレート
 - `samples/defs/` - サンプルJSON定義
+- `samples/sample-dialect/` - カスタムダイアレクトのサンプル実装
 
 ## Development
 
