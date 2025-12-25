@@ -87,6 +87,10 @@ public class DefinitionService {
             data.setFixtures((Map<String, Object>) raw.get("fixtures"));
         }
 
+        if (raw.containsKey("dialects")) {
+            data.setDialects((Map<String, Object>) raw.get("dialects"));
+        }
+
         return data;
     }
 
@@ -112,6 +116,12 @@ public class DefinitionService {
         deepMerge(mergedFixtures, global.getFixtures());
         deepMerge(mergedFixtures, specific.getFixtures());
         result.setFixtures(mergedFixtures);
+
+        // Dialects: deep merge with specific overriding global
+        Map<String, Object> mergedDialects = new HashMap<>();
+        deepMerge(mergedDialects, global.getDialects());
+        deepMerge(mergedDialects, specific.getDialects());
+        result.setDialects(mergedDialects);
 
         return result;
     }

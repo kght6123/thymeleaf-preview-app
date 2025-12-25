@@ -61,6 +61,7 @@ public class PreviewController {
         model.addAttribute("_templatePath", templateName);
         model.addAttribute("_previewCss", definitions.getCss());
         model.addAttribute("_previewJs", definitions.getJs());
+        model.addAttribute("_dialects", definitions.getDialects());
 
         // Add fragment if specified
         if (fragment != null && !fragment.isBlank()) {

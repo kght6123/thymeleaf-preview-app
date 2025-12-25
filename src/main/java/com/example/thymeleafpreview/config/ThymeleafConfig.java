@@ -1,8 +1,10 @@
 package com.example.thymeleafpreview.config;
 
+import com.example.thymeleafpreview.dialect.DialectLoader;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.thymeleaf.dialect.IDialect;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -14,9 +16,11 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 public class ThymeleafConfig {
 
     private final PreviewProperties previewProperties;
+    private final DialectLoader dialectLoader;
 
-    public ThymeleafConfig(PreviewProperties previewProperties) {
+    public ThymeleafConfig(PreviewProperties previewProperties, DialectLoader dialectLoader) {
         this.previewProperties = previewProperties;
+        this.dialectLoader = dialectLoader;
     }
 
     /**
@@ -60,6 +64,12 @@ public class ThymeleafConfig {
         SpringTemplateEngine engine = new SpringTemplateEngine();
         engine.addTemplateResolver(externalTemplateResolver);
         engine.addTemplateResolver(classpathTemplateResolver);
+
+        // Load and register external dialects via ServiceLoader
+        for (IDialect dialect : dialectLoader.loadExternalDialects()) {
+            engine.addDialect(dialect);
+        }
+
         engine.setEnableSpringELCompiler(true);
         return engine;
     }

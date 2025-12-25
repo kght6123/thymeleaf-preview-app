@@ -68,6 +68,8 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <mainClass>com.example.thymeleafpreview.ThymeleafPreviewApplication</mainClass>
+                    <!-- Enable PropertiesLauncher for external JAR loading via loader.path -->
+                    <layout>ZIP</layout>
                 </configuration>
             </plugin>
         </plugins>
