@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Footer Component</title>
+    <link rel="stylesheet" th:href="@{/assets/assets/css/style.css}"/>
+</head>
+<body>
+    <footer th:fragment="footer" class="site-footer">
+        <div class="footer-content">
+            <p th:text="${footerText}">&copy; 2024 Thymeleaf Preview Tool. All rights reserved.</p>
+            <p class="version" th:text="'Version: ' + ${appVersion}">Version: 1.0.0</p>
+        </div>
+    </footer>
+</body>
+</html>

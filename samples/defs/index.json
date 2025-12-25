@@ -1,0 +1,31 @@
+{
+    "fixtures": {
+        "title": "Welcome to Thymeleaf Preview",
+        "description": "A powerful tool for previewing Thymeleaf templates with mock data injection. Edit templates and JSON files, then refresh your browser to see changes instantly.",
+        "features": [
+            "Hot Reload - No server restart needed",
+            "JSON-based Mock Data Injection",
+            "Template Catalog with Search",
+            "Static Asset Serving",
+            "Path Traversal Protection",
+            "Fragment Support"
+        ],
+        "users": [
+            {
+                "name": "Alice Johnson",
+                "email": "alice@example.com",
+                "role": "Admin"
+            },
+            {
+                "name": "Bob Smith",
+                "email": "bob@example.com",
+                "role": "Developer"
+            },
+            {
+                "name": "Carol Williams",
+                "email": "carol@example.com",
+                "role": "Designer"
+            }
+        ]
+    }
+}

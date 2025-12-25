@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${title}">Sample Page</title>
+    <link rel="stylesheet" th:href="@{/assets/assets/css/style.css}"/>
+</head>
+<body>
+    <header th:replace="~{components/header :: header}">Header</header>
+
+    <main class="container">
+        <h1 th:text="${title}">Welcome</h1>
+        <p th:text="${description}">Description here</p>
+
+        <section class="features">
+            <h2>Features</h2>
+            <ul>
+                <li th:each="feature : ${features}" th:text="${feature}">Feature item</li>
+            </ul>
+        </section>
+
+        <section class="users" th:if="${users != null and !users.empty}">
+            <h2>Users</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="user : ${users}">
+                        <td th:text="${user.name}">John Doe</td>
+                        <td th:text="${user.email}">john@example.com</td>
+                        <td th:text="${user.role}">Admin</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer th:replace="~{components/footer :: footer}">Footer</footer>
+
+    <script th:src="@{/assets/assets/js/main.js}"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Header Component</title>
+    <link rel="stylesheet" th:href="@{/assets/assets/css/style.css}"/>
+</head>
+<body>
+    <header th:fragment="header" class="site-header">
+        <nav class="navbar">
+            <a th:href="@{/preview(tpl='index.html')}" class="logo" th:text="${siteName}">Thymeleaf Preview</a>
+            <ul class="nav-links">
+                <li><a th:href="@{/preview(tpl='index.html')}">Home</a></li>
+                <li><a th:href="@{/preview(tpl='pages/about.html')}">About</a></li>
+                <li><a th:href="@{/preview(tpl='pages/contact.html')}">Contact</a></li>
+                <li><a th:href="@{/catalog}">Catalog</a></li>
+            </ul>
+        </nav>
+    </header>
+</body>
+</html>

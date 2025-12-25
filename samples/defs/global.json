@@ -1,0 +1,7 @@
+{
+    "fixtures": {
+        "siteName": "Thymeleaf Preview Tool",
+        "footerText": "© 2024 Thymeleaf Preview Tool. All rights reserved.",
+        "appVersion": "1.0.0"
+    }
+}

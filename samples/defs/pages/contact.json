@@ -1,0 +1,11 @@
+{
+    "fixtures": {
+        "title": "Contact Us",
+        "subtitle": "Have questions or feedback? We'd love to hear from you!",
+        "contact": {
+            "email": "support@thymeleaf-preview.example.com",
+            "phone": "+81-3-1234-5678",
+            "address": "1-2-3 Shibuya, Shibuya-ku, Tokyo 150-0002, Japan"
+        }
+    }
+}

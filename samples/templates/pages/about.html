@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${title}">About</title>
+    <link rel="stylesheet" th:href="@{/assets/assets/css/style.css}"/>
+</head>
+<body>
+    <header th:replace="~{components/header :: header}">Header</header>
+
+    <main class="container">
+        <h1 th:text="${title}">About Us</h1>
+
+        <section class="company-info">
+            <h2 th:text="${company.name}">Company Name</h2>
+            <p th:text="${company.description}">Company description</p>
+
+            <div class="details">
+                <p><strong>Founded:</strong> <span th:text="${company.founded}">2020</span></p>
+                <p><strong>Location:</strong> <span th:text="${company.location}">Tokyo, Japan</span></p>
+                <p><strong>Employees:</strong> <span th:text="${company.employees}">100</span></p>
+            </div>
+        </section>
+
+        <section class="team" th:if="${team != null}">
+            <h2>Our Team</h2>
+            <div class="team-grid">
+                <div th:each="member : ${team}" class="team-member">
+                    <h3 th:text="${member.name}">Member Name</h3>
+                    <p class="role" th:text="${member.position}">Position</p>
+                    <p th:text="${member.bio}">Bio</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="~{components/footer :: footer}">Footer</footer>
+</body>
+</html>
